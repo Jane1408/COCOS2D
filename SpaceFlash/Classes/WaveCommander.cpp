@@ -1,6 +1,6 @@
 #include "ui/CocosGUI.h" 
 #include "WaveCommander.h"
-
+#include "Definitions.h"
 WaveCommander::WaveCommander()
 {
 }
@@ -9,6 +9,7 @@ WaveCommander * WaveCommander::create(cocos2d::Layer * layer)
 {
 	WaveCommander * waveCom = new WaveCommander();
 	waveCom->m_layer = layer;
+	waveCom->SetProgressLine();
 	return waveCom;
 }
 
@@ -56,9 +57,48 @@ void WaveCommander::Update(float dt)
 	}
 	if (m_enemyes.size() == 0)
 	{
+		m_waveHealth = 0;
 		StartWave();
 		++wave;
+		UpdateProgressLine();
+		if (wave > 16)
+		{
+			cocos2d::EventCustom event(WIN_GAME);
+			cocos2d::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
+		}
 	}
+}
+
+void WaveCommander::KillAll()
+{
+	for (auto &it : m_enemyes)
+	{
+		it->Kill();
+	}
+}
+
+void WaveCommander::SetProgressLine()
+{
+	m_progressLine = new cocos2d::Sprite();
+	m_progressLine->initWithFile(PROGRESS_LINE);
+	m_progressLine->setPosition({ m_layer->getContentSize().width / 2, m_layer->getContentSize().height - m_progressLine->getContentSize().height / 2 });
+	m_layer->addChild(m_progressLine);
+}
+
+void WaveCommander::UpdateProgressLine()
+{
+	int currentHealth = 0;
+	for (auto *it : m_enemyes)
+	{
+		currentHealth += it->GetHealth();
+	}
+	currentHealth = currentHealth < 0 ? 0 : currentHealth;
+	m_progressLine->setScaleX(float(currentHealth) / float(m_waveHealth));
+}
+
+int WaveCommander::GetWaveNumber()
+{
+	return wave - 1;
 }
 
 void WaveCommander::SetEnemyes(std::vector<CEnemy::Type> const& waveEnemyes)
@@ -67,6 +107,7 @@ void WaveCommander::SetEnemyes(std::vector<CEnemy::Type> const& waveEnemyes)
 	{
 		int pos = cocos2d::RandomHelper::random_int(100, int(m_layer->getContentSize().width - 100));
 		auto enemy = CEnemy::create({ float(pos), m_layer->getContentSize().height - 100 }, it);
+		m_waveHealth += enemy->GetHealth();
 		m_layer->addChild(enemy);
 		m_enemyes.push_back(enemy);
 	}

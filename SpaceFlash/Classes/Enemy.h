@@ -35,10 +35,12 @@ protected:
 private:
 	CEnemy();
 	void initOptions();
+	void initExplosionAnim();
 
 	bool m_isReady;
 	cocos2d::RefPtr<cocos2d::MoveTo> m_startEntering;
 	Type m_type;
 	float m_speed;
 	std::vector<int> m_gunsSlots;
+	cocos2d::RefPtr<cocos2d::Animate> m_explosion;
 };

@@ -36,16 +36,19 @@ bool MainMenu::init()
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto backgrowndSprite = Sprite::create("BG.jpg");
+	auto backgrowndSprite = Sprite::create(BG_IMG);
 	backgrowndSprite->setPosition(Point(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 
 	this->addChild(backgrowndSprite);
 
-	auto playItem = MenuItemImage::create("play.png", "PLAY_Clicked.png", CC_CALLBACK_1(MainMenu::GoToGameScene, this));
+	auto playItem = MenuItemImage::create(PLAY_BUTTON, PLAY_BUTTON_CLICKED, CC_CALLBACK_1(MainMenu::GoToGameScene, this));
 	playItem->setPosition(Point(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 
 	auto menu = Menu::create(playItem, NULL);
 	menu->setPosition(Point::ZERO);
+
+	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(BG_SOUND.c_str(), true);
+	CocosDenshion::SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0.5);
 
 	this->addChild(menu);
 

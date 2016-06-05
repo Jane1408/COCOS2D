@@ -25,8 +25,14 @@ private:
 	void CheckGameCollision(cocos2d::PhysicsBody & first, cocos2d::PhysicsBody & second);
 	bool onContactBegin(cocos2d::PhysicsContact &contact);
 
+	void AddPlists();
+	void SetListeners();
+	void InitLayer();
 
 	cocos2d::RefPtr<Player> m_player;
 	WaveCommander * commander;
+	void GoToLoseScene();
+	void GoToWinScene();
+
 };
 

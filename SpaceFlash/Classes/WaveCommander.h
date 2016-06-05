@@ -31,12 +31,18 @@ public:
 	~WaveCommander();
 	void StartWave();
 	void Update(float dt);
+	void KillAll();
+	void SetProgressLine();
+	void UpdateProgressLine();
+	int GetWaveNumber();
 private:
 	WaveCommander();
 	void SetEnemyes(std::vector<CEnemy::Type> const& waveEnemyes);
 
 	cocos2d::Layer * m_layer;
 	std::vector<CEntity*> m_enemyes;
+	cocos2d::Sprite * m_progressLine;
+	int m_waveHealth = 0;
 	int wave = 1;
 };
 
